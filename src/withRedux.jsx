@@ -1,14 +1,19 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { actionsBank } from 'src/redux/reducers';
+import React, { PureComponent } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+let actionsBank ={}
 
-const notFoundInReduxMessage = field => console.error(
-  'withRedux Error: No Reducer found for',
-  `${field}.`,
-  'You may need to add the following to redux/reducers/index.js ~',
-  `import ${field}, * as ${field}Actions from './${field}';`,
-);
+if (DEBUG === true ){
+  actionsBank = require("src/redux/reducers");
+}
+
+const notFoundInReduxMessage = field =>
+  console.error(
+    "withRedux Error: No Reducer found for",
+    `${field}.`,
+    "You may need to add the following to redux/reducers/index.js ~",
+    `import ${field}, * as ${field}Actions from './${field}';`
+  );
 
 const withRedux = (reducers, WrappedComponent, withState = true, withActions = true) => {
   const HOC = class HOC extends PureComponent {
@@ -17,10 +22,10 @@ const withRedux = (reducers, WrappedComponent, withState = true, withActions = t
     }
   };
 
-  const mapState = (state) => {
+  const mapState = state => {
     const stateObj = {};
 
-    reducers.forEach((reducer) => {
+    reducers.forEach(reducer => {
       if (actionsBank[reducer]) {
         Object.assign(stateObj, { [reducer]: state[reducer] });
       } else {
@@ -31,14 +36,14 @@ const withRedux = (reducers, WrappedComponent, withState = true, withActions = t
     return stateObj;
   };
 
-  const mapDispatch = (dispatch) => {
+  const mapDispatch = dispatch => {
     const Actions = {};
 
-    reducers.forEach((reducer) => {
+    reducers.forEach(reducer => {
       if (actionsBank[reducer]) {
         const actionName = `${[reducer]}Actions`;
         Object.assign(Actions, {
-          [actionName]: bindActionCreators(actionsBank[reducer], dispatch),
+          [actionName]: bindActionCreators(actionsBank[reducer], dispatch)
         });
       } else {
         notFoundInReduxMessage(reducer);
@@ -50,7 +55,7 @@ const withRedux = (reducers, WrappedComponent, withState = true, withActions = t
 
   return connect(
     withState ? mapState : null,
-    withActions ? mapDispatch : {},
+    withActions ? mapDispatch : {}
   )(HOC);
 };
 
