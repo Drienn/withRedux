@@ -8,11 +8,13 @@ An HOC to simplify hooking redux up with your React Components.
 
 ### Prerequisites
 
-In order to use this HOC, you'll need to add an exported object from your reducer/index.js called *actionsBank*.
+In order to use this HOC, you'll need to add an exported object from your reducer/index.js called *actionsBank* which will contain key value pairs that will look like this: 
+
+`[reducer]: [reducer]Actions`
 
 Depending on your style of doing redux, use the applicable examples below:
 
-* for the style of having just one reducer file that holds but actions and reducers, do something like this:
+* for the style of having just one reducer file that holds both actions and reducers, do something like this:
 ```
 import posts, * as postsActions from './posts'; //Or whatever paths
 import authors, * as authorsActions from './authors';
@@ -24,7 +26,7 @@ import comments, * as commentsActions from './comments';
 import posts from "./posts"; //Or whatever paths
 import authors from "./authors";
 import comments from "./comments";
-import * as postActions from "../actions/posts";
+import * as postsActions from "../actions/posts";
 import * as authorsActions from "../actions/authors";
 import * as commentsActions from "../actions/comments";
 ```
@@ -32,7 +34,7 @@ import * as commentsActions from "../actions/comments";
 *  Then create and export the _actionsBank_ object which in this example, would look like this: 
 ```
 export const actionsBank = {
-  posts: postActions,
+  posts: postsActions,
   authors: authorsActions,
   comments: commentsActions
 };
@@ -44,7 +46,7 @@ Import with-redux-hoc (and the cool thing is you won't need to import anything f
 
 `import withRedux from 'with-redux-hoc';`
 
-The withRedux params looks like this:
+The withRedux params look like this:
 
 `withRedux(reducers, actionsBank, WrappedComponent, withState = true, withActions = true)`
 
@@ -110,14 +112,18 @@ _just changing the last line of Example.js_
 export default withRedux(['authors', 'posts'], actionsBank, Example);
 ```
 
-props will be: `Example Component's Props: {authors: Array(10), posts: Array(100), authorsActions: {…}, postsActions: {…}}`
+props will be: 
+
+`Example Component's Props: {authors: Array(10), posts: Array(100), authorsActions: {…}, postsActions: {…}}`
 
 and so on...
 ```
 export default withRedux(['authors', 'posts', 'comments'], actionsBank, Example);
 ```
 
-props will be: `Example Component's Props: {authors: Array(10), posts: Array(100), comments: Array(500), authorsActions: {…}, postsActions: {…}, …}`
+props will be: 
+
+`Example Component's Props: {authors: Array(10), posts: Array(100), comments: Array(500), authorsActions: {…}, postsActions: {…}, …}`
 
 ### Why Use?
 
