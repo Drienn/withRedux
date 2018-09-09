@@ -1,11 +1,6 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-let actionsBank ={}
-
-if (DEBUG === true ){
-  actionsBank = require("src/redux/reducers");
-}
 
 const notFoundInReduxMessage = field =>
   console.error(
@@ -15,7 +10,7 @@ const notFoundInReduxMessage = field =>
     `import ${field}, * as ${field}Actions from './${field}';`
   );
 
-const withRedux = (reducers, WrappedComponent, withState = true, withActions = true) => {
+const withRedux = (reducers, actionsBank, WrappedComponent, withState = true, withActions = true) => {
   const HOC = class HOC extends PureComponent {
     render() {
       return <WrappedComponent {...this.props} />;
