@@ -8,20 +8,22 @@ An HOC to simplify hooking redux up with your React Components.
 
 ### Prerequisites
 
-In order to use this HOC, you'll need to add an exported object from your reducer/index.js called *actionsBank* which will contain key value pairs that will look like this: 
+In order to use this HOC, you'll need to add an exported object from your reducer/index.js called _actionsBank_ which will contain key value pairs that will look like this:
 
 `[reducer]: [reducer]Actions`
 
 Depending on your style of doing redux, use the applicable examples below:
 
-* for the style of having just one reducer file that holds both actions and reducers, do something like this:
+- for the style of having just one reducer file that holds both actions and reducers, do something like this:
+
 ```
 import posts, * as postsActions from './posts'; //Or whatever paths
 import authors, * as authorsActions from './authors';
 import comments, * as commentsActions from './comments';
 ```
 
-* for the style of having actions and reducers in their own seperate folders, do something like this:
+- for the style of having actions and reducers in their own seperate folders, do something like this:
+
 ```
 import posts from "./posts"; //Or whatever paths
 import authors from "./authors";
@@ -31,7 +33,8 @@ import * as authorsActions from "../actions/authors";
 import * as commentsActions from "../actions/comments";
 ```
 
-*  Then create and export the _actionsBank_ object which in this example, would look like this: 
+- Then create and export the _actionsBank_ object which in this example, would look like this:
+
 ```
 export const actionsBank = {
   posts: postsActions,
@@ -50,17 +53,34 @@ The withRedux params look like this:
 
 `withRedux(reducers, actionsBank, WrappedComponent, withState = true, withActions = true)`
 
-*   about withState and withActions
+- about withState and withActions -- Updated!
 
-> withState and withActions are optional, if you don't pass them in, you'll just get all the state and all the actions that you ask for. 
+> withState and withActions are optional, if you don't pass them in, you'll just get all the state and all the actions available for the specified keys.
 
 > Sometimes it's only necessary to have the redux state or the redux actions and not both. These options just give a little more flexibility to your component.
+
+As of version `1.0.5` you can now add an object to specify which keys you would like to actually get from your redux state specifically per component.
+
+For Example:
+
+![](./ss.png)
+
+_Please notice - you will need to reference the redux keys in both the reduxState and reduxActions as in the above example._
+
+In other words, don't use
+
+`postsActions: ['getPosts']`,
+
+use
+
+`posts: ['getPosts']`
 
 The real "magic" is in the first argument, reducers. reducers will be an array of strings that will match the keys you have set in your redux store.
 
 ### Example
 
 _reducer/index.js_
+
 ```
 import { combineReducers } from "redux";
 import posts from "./posts";
@@ -112,20 +132,20 @@ _just changing the last line of Example.js_
 export default withRedux(['authors', 'posts'], actionsBank, Example);
 ```
 
-props will be: 
+props will be:
 
 `Example Component's Props: {authors: Array(10), posts: Array(100), authorsActions: {…}, postsActions: {…}}`
 
 and so on...
+
 ```
 export default withRedux(['authors', 'posts', 'comments'], actionsBank, Example);
 ```
 
-props will be: 
+props will be:
 
-`Example Component's Props: {authors: Array(10), posts: Array(100), comments: Array(500), authorsActions: {…}, postsActions: {…}, …}`
+`Example Component's Props: {authors: Array(10), posts: Array(100), comments: Array(500), authorsActions: {…}, postsActions: {…}, …}`
 
 ### Why Use?
 
 I got tired of writing all of those imports and making those `mapStateToProps` and `mapDispatchToProps` functions in every component I needed to hook up to redux. This HOC component cuts down on a lot of boiler plate when connecting components to redux :-).
-

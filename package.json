@@ -1,6 +1,6 @@
 {
   "name": "with-redux-hoc",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "React HOC which simplifies connecting redux to components",
   "homepage": "https://github.com/Drienn/withRedux",
   "keywords": [
